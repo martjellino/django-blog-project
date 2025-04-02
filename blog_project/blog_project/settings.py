@@ -16,6 +16,9 @@ from dotenv import load_dotenv
 
 load_dotenv(override=True)
 
+print(f"PG_PORT from env: {os.environ.get('PG_PORT')}")
+print(f"PG_HOST from env: {os.environ.get('PG_HOST')}")
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
