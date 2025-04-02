@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <article class="card mb-4">
+            <div class="card-body">
+                <h1 class="card-title mb-3">{{ post.title }}</h1>
+                <p class="text-muted">
+                    <small>
+                        By {{ post.author.username }} | 
+                        {{ post.publish|date:"F d, Y" }} | 
+                        Category: <span class="category-badge">{{ post.get_category_display }}</span>
+                    </small>
+                </p>
+                
+                <div class="mb-2">
+                    {% for tag in post.tags.all %}
+                        <a href="{{ tag.get_absolute_url }}" class="badge bg-secondary text-decoration-none me-1">{{ tag.name }}</a>
+                    {% endfor %}
+                </div>
+
+                {% if post.image %}
+                    <div class="post-image mb-4">
+                        <img src="{{ post.image.url }}" alt="{{ post.title }}" class="img-fluid rounded">
+                    </div>
+                {% endif %}
+                
+                <div class="card-text">
+                    {{ post.body|linebreaks }}
+                </div>
+            </div>
+        </article>
+
+        <!-- Comment Section -->
+        <div class="card mb-4">
+            <div class="card-header">
+                {{ comments.count }} Comment{{ comments.count|pluralize }}
+            </div>
+            <div class="card-body">
+                {% for comment in comments %}
+                    <div class="mb-4">
+                        <strong>{{ comment.name }}</strong>
+                        <small class="text-muted ms-2">{{ comment.created|date:"F d, Y" }}</small>
+                        <p>{{ comment.body|linebreaks }}</p>
+                        <hr>
+                    </div>
+                {% empty %}
+                    <p>No comments yet.</p>
+                {% endfor %}
+                
+                <!-- Comment Form -->
+                <h4>Leave a comment</h4>
+                <form method="post" action="#">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="body" class="form-label">Comment</label>
+                        <textarea class="form-control" id="body" name="body" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Comment</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <!-- Sidebar -->
+        <div class="card mb-4">
+            <div class="card-header">About the Author</div>
+            <div class="card-body">
+                <h5>{{ post.author.username }}</h5>
+                {% if post.author.profile.bio %}
+                    <p>{{ post.author.profile.bio }}</p>
+                {% else %}
+                    <p>No bio available.</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">Recent Posts</div>
+            <div class="card-body">
+                {% for recent_post in recent_posts %}
+                    <a href="{{ recent_post.get_absolute_url }}" class="d-block mb-2">{{ recent_post.title }}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Tag: {{ tag.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <h1 class="mb-4">Tag: {{ tag.name }}</h1>
+        
+        {% for post in posts %}
+            <article class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">
+                        <a href="{{ post.get_absolute_url }}" class="text-decoration-none">{{ post.title }}</a>
+                    </h2>
+                    <p class="text-muted">
+                        <small>
+                            By {{ post.author.username }} | 
+                            {{ post.publish|date:"F d, Y" }} | 
+                            Category: <a href="{{ post.category.get_absolute_url }}">{{ post.category.name }}</a>
+                        </small>
+                    </p>
+                    <div class="card-text mb-3">
+                        {{ post.body|truncatewords:50|linebreaks }}
+                    </div>
+                    <a href="{{ post.get_absolute_url }}" class="btn btn-primary">Read More</a>
+                </div>
+            </article>
+        {% empty %}
+            <div class="alert alert-info">
+                No posts with this tag.
+            </div>
+        {% endfor %}
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">Other Tags</div>
+            <div class="card-body">
+                {% for other_tag in tags %}
+                    {% if other_tag != tag %}
+                        <a href="{{ other_tag.get_absolute_url }}" class="badge bg-secondary text-decoration-none me-1 mb-1">{{ other_tag.name }}</a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

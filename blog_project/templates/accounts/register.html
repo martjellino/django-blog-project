@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="text-center">Register</h2>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <fieldset class="form-group">
+                        {% for field in form %}
+                            <div class="mb-3">
+                                {{ field.label_tag }}
+                                <div class="form-control-wrapper">
+                                    {{ field.as_widget|safe }}
+                                </div>
+                                {% if field.errors %}
+                                    {% for error in field.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ error }}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                                {% if field.help_text %}
+                                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </fieldset>
+                    <div class="form-group text-center">
+                        <button class="btn btn-primary" type="submit">Sign Up</button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-center">
+                <small>
+                    Already have an account? <a href="{% url 'login' %}">Sign In</a>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
